@@ -1,0 +1,8 @@
+<launch>
+  <node name="barcode_detector" pkg="barcode_detector" type="barcode_detector" output="screen">
+    <remap from="barcode/input" to="refills_wrist_camera/image_mono"/>
+    <remap from="barcode/output" to="refills_wrist_camera/barcodes_detected"/>
+  </node>
+</launch>
+
+
