@@ -24,6 +24,14 @@ find_package(catkin REQUIRED COMPONENTS
 
 find_package( OpenCV REQUIRED )
 
+catkin_package(
+#  INCLUDE_DIRS include
+#  LIBRARIES barcode_detector2
+#  CATKIN_DEPENDS other_catkin_pkg
+#  DEPENDS system_lib
+)
+
+
 ###########
 ## Build ##
 ###########
@@ -57,11 +65,4 @@ target_link_libraries(barcode_detector
    ${OpenCV_LIBRARIES}
 )
 
-target_link_libraries(barcode_detector
-   halconcpp
-   halcon
-   ${catkin_LIBRARIES}
-   ${OpenCV_LIBRARIES}
-)
-
-
+add_dependencies(barcode_detector ${catkin_EXPORTED_TARGETS})
