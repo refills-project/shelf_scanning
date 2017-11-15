@@ -6,6 +6,7 @@
 #include <ros/ros.h>
 #include <iostream>
 #include <sensor_msgs/image_encodings.h>
+#include <refills_msgs/Barcode.h>
 #include <halcon_image.h>
 
 // Using image_transport for publishing and subscribing to images in ROS
@@ -37,6 +38,7 @@ class ImageConverter{
   image_transport::ImageTransport it_;
   image_transport::Subscriber image_sub_;
   image_transport::Publisher image_pub_;
+  ros::Publisher barcode_pub_;
   
   // Local iconic variables
   HObject  ho_Image, ho_SymReg;
@@ -61,6 +63,7 @@ public:
     // Subscribe and  publish using image_transport
     image_sub_ = it_.subscribe("barcode/input", 1, &ImageConverter::imageCb, this); // barcode/image
     image_pub_ = it_.advertise("barcode/output", 1);
+    barcode_pub_ = nh_.advertise<refills_msgs::Barcode>("barcode/pose", 100);
   }
 
   ~ImageConverter()
@@ -72,7 +75,7 @@ public:
     halcon_bridge::HalconImagePtr halcon_ptr;
     bool found_barcodes = false;
 
-    std::cout << "---imageCb---" << std::endl;
+//    std::cout << "---imageCb---" << std::endl; 
 
     try{
       halcon_ptr = halcon_bridge::toHalconCopy(msg);
@@ -127,13 +130,23 @@ public:
     }
 
 
-    std::cout << "Found # of barcodes: " << num_barcodes << std::endl;
+//    std::cout << "Found # of barcodes: " << num_barcodes << std::endl;
 
     //std::cout << "Barcodes found: " << found_bc_strings.ToString() << std::endl;
 
     for (unsigned int i=0; i < num_barcodes ; ++i) {
       HString code = found_bc_strings[i];
-      std::cout << "Barcode: " << code << std::endl;
+//      std::cout << "Barcode: " << code << std::endl;
+      refills_msgs::Barcode barcode_msg;
+
+      barcode_msg.barcode_pose.header.frame_id = halcon_ptr->header.frame_id;
+      barcode_msg.barcode_pose.header.stamp = halcon_ptr->header.stamp;
+
+      barcode_msg.barcode_pose.pose.orientation.w = 1;
+      barcode_msg.barcode_pose.pose.position.z = 0.2;
+
+      barcode_msg.barcode = code;
+      barcode_pub_.publish(barcode_msg);
     }
 
     try {
@@ -166,7 +179,7 @@ public:
     }
 
 
-    std::cout << "***" << std::endl;
+   // std::cout << "***" << std::endl;
 
 
 
