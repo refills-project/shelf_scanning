@@ -2,6 +2,10 @@
   <node name="barcode_detector" pkg="barcode_detector" type="barcode_detector" output="screen">
     <remap from="barcode/input" to="refills_wrist_camera/image_mono"/>
     <remap from="barcode/output" to="refills_wrist_camera/barcodes_detected"/>
+    <param name="image_transport" value="compressed"/>
+    <remap from="barcode/input/compressed" to="refills_wrist_camera/image_mono/compressed"/>
+    <remap from="barcode/input/theora" to="refills_wrist_camera/image_mono/theora"/>
+
   </node>
 </launch>
 
