@@ -10,14 +10,14 @@ from tf2_geometry_msgs.tf2_geometry_msgs import do_transform_point, do_transform
 from tf2_ros.buffer import Buffer
 from tf2_ros.transform_listener import TransformListener
 
-barcodes = defaultdict(list)
-barcode_positions = {}
+barcodes_min = defaultdict(lambda: np.ones(3)*np.inf)
+barcodes_max = defaultdict(lambda: np.ones(3)*-np.inf)
 frame_id = 'map'
 tfBuffer = None
 tf_listener = None
 barcode_pose_sub = None
 tf_broadcaster = None
-min_scans = 10
+min_scans = 3
 
 
 def init():
@@ -48,29 +48,29 @@ def publish_tf_pose(barcode, barcode_position):
                                  frame_id)
 
 def barcode_sub(msg):
-    global frame_id, barcodes
+    global frame_id, barcodes_min, barcodes_max
     map_pose = transformPose(frame_id, msg.barcode_pose)
-    barcodes[msg.barcode].append(map_pose.pose.position)
+    barcodes_min[msg.barcode][0] = min(barcodes_min[msg.barcode][0], map_pose.pose.position.x)
+    barcodes_min[msg.barcode][1] = min(barcodes_min[msg.barcode][1], map_pose.pose.position.y)
+    barcodes_min[msg.barcode][2] = min(barcodes_min[msg.barcode][2], map_pose.pose.position.z)
+    barcodes_max[msg.barcode][0] = max(barcodes_max[msg.barcode][0], map_pose.pose.position.x)
+    barcodes_max[msg.barcode][1] = max(barcodes_max[msg.barcode][1], map_pose.pose.position.y)
+    barcodes_max[msg.barcode][2] = max(barcodes_max[msg.barcode][2], map_pose.pose.position.z)
+    pass
 
 
 def get_barcode_positions():
-    global barcodes, barcode_positions
-    for k, v in barcodes.items():
-        points = []
-        for barcode_position in v:
-            points.append([barcode_position.x,
-                           barcode_position.y,
-                           barcode_position.z, ])
-        mean_pose = (np.min(points, axis=0) + np.max(points, axis=0))/2
-        if len(points) > 10:
-            print(k, mean_pose)
+    global barcodes_min, barcodes_max
+    for k, v in barcodes_min.items():
+        mean_pose = (v + barcodes_max[k])/2
+        if np.inf not in mean_pose:
             publish_tf_pose(k, mean_pose)
 
 
 if __name__ == '__main__':
     init()
-    rospy.sleep(1)
+    r = rospy.Rate(2)
     while not rospy.is_shutdown():
         get_barcode_positions()
-        rospy.sleep(.5)
+        r.sleep()
     rospy.spin()
