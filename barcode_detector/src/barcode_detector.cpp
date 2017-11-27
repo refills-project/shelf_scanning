@@ -143,7 +143,7 @@ public:
       barcode_msg.barcode_pose.header.stamp = halcon_ptr->header.stamp;
 
       barcode_msg.barcode_pose.pose.orientation.w = 1;
-      barcode_msg.barcode_pose.pose.position.z = 0.2;
+      barcode_msg.barcode_pose.pose.position.z = 0.3;
 
       barcode_msg.barcode = code;
       barcode_pub_.publish(barcode_msg);
