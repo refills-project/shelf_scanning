@@ -23,11 +23,140 @@ tf_broadcaster = None
 marker_pub = None
 min_scans = 3
 
+refills_models_path = 'package://refills_models/'
+
 barcode_to_object = {
-    # '25011562': 'file:///home/ichumuh/refills_models/Shelf1/CalgonitFinishVorratspack/SM_CalgonitFinishVorratspack_reexport.dae',
-    # '25011562': 'file:///home/ichumuh/refills_models/Shelf1/CalgonitFinishVorratspack/Axle_Full.dae',
-    # '25011562': '/home/ichumuh/homer_ws/src/iai_maps/iai_shelfs/meshes/Shelf_3.dae',
-    # '24470003': 'finish small pack'
+    #shelf1
+    #row4
+    '22005632': 'Shelf1/CalgonitFinishVorratspack/SM_CalgonitFinishVorratspack_reexport.dae',
+    '24476003': 'Shelf1/CalgonitFinishVorratspack/Axle_Full.dae',
+    '25011555': '/home/ichumuh/homer_ws/src/iai_maps/iai_shelfs/meshes/Shelf_3.dae',
+    '25011562': 'finish small pack',
+    '25349108': 'finish small pack',
+    #row3
+    '21240362': 'finish small pack',
+    '21766718': 'finish small pack',
+    '24227711': 'finish small pack',
+    '23313729': 'finish small pack',
+    '23779549': 'finish small pack',
+    '21923890': 'finish small pack',
+    '22270306': 'finish small pack',
+    #row2
+    '20047283': 'finish small pack',
+    '21960680': 'finish small pack',
+    '23323841': 'finish small pack',
+    '25231298': 'finish small pack',
+    '24249294': 'finish small pack',
+    '22355423': 'finish small pack',
+    #row1
+    '25001839': 'finish small pack',
+    '20460884': 'finish small pack',
+    '22622891': 'finish small pack',
+    '20100551': 'finish small pack',
+    '20156527': 'finish small pack',
+    '25169379': 'finish small pack',
+    '21254819': 'finish small pack',
+    #row0
+    '20279950': 'finish small pack',
+    '25442052': 'finish small pack',
+    '23841604': 'finish small pack',
+    '24573191': 'finish small pack',
+    '25348125': 'finish small pack',
+    '24026109': 'finish small pack',
+    '24339612': 'finish small pack',
+    '25079234': 'finish small pack',
+    #shelf2
+    #row0
+    '20134624': 'Shelf2/',
+    '24588232': 'Shelf2/',
+    '25222739': 'Shelf2/',
+    '21026966': 'Shelf2/',
+    '21026942': 'Shelf2/',
+    '25191516': 'Shelf2/',
+    #row1
+    '25229905': 'Shelf2/',
+    '25229912': 'Shelf2/',
+    '25230093': 'Shelf2/',
+    '25229851': 'Shelf2/',
+    '25230109': 'Shelf2/',
+    #row2
+    '25229899': 'Shelf2/',
+    '25229882': 'Shelf2/',
+    '22947635': 'Shelf2/',
+    '22947604': 'Shelf2/',
+    '24491815': 'Shelf2/',
+    '24491822': 'Shelf2/',
+    '25072372': 'Shelf2/',
+    '20369422': 'Shelf2/',
+    '20369460': 'Shelf2/',
+    '20349453': 'Shelf2/',
+    '20369880': 'Shelf2/',
+    '21907555': 'Shelf2/',
+    #row3
+    '21557774': 'Shelf2/',
+    '24639408': 'Shelf2/',
+    '25393552': 'Shelf2/',
+    #Shelf3
+    #row0
+    '22607256': 'Shelf3/',
+    '22607072': 'Shelf3/',
+    '25543018': 'Shelf3/',
+    '24044912': 'Shelf3/',
+    '25218732': 'Shelf3/',
+    '24025898': 'Shelf3/',
+    '22606679': 'Shelf3/',
+    #row1
+    '25206982': 'Shelf3/',
+    '25206968': 'Shelf3/',
+    '25206890': 'Shelf3/',
+    '25206883': 'Shelf3/',
+    '24235761': 'Shelf3/',
+    '24220682': 'Shelf3/',
+    '25118605': 'Shelf3/',
+    '22607003': 'Shelf3/',
+    '22606969': 'Shelf3/',
+    '23995994': 'Shelf3/',
+    #row2
+    '25354755': 'Shelf3/',
+    '25197631': 'Shelf3/',
+    '25202090': 'Shelf3/',
+    '25202120': 'Shelf3/',
+    '25238280': 'Shelf3/',
+    '25238297': 'Shelf3/',
+    '25238235': 'Shelf3/',
+    '25238303': 'Shelf3/',
+    '24727877': 'Shelf3/',
+    '22938756': 'Shelf3/',
+    '25369793': 'Shelf3/',
+    '24115520': 'Shelf3/',
+    #row3
+    '24604703': 'Shelf3/',
+    '24602013': 'Shelf3/',
+    '25369526': 'Shelf3/',
+    '25369434': 'Shelf3/',
+    '25369700': 'Shelf3/',
+    '25653298': 'Shelf3/',
+    '25653359': 'Shelf3/',
+    '25188752': 'Shelf3/',
+    '25367607': 'Shelf3/',
+    '25348031': 'Shelf3/',
+    '25188769': 'Shelf3/',
+    '25443752': 'Shelf3/',
+    '25443820': 'Shelf3/',
+    '25537338': 'Shelf3/',
+    #row4
+    '25447606': 'Shelf3/',
+    '25447906': 'Shelf3/',
+    '25447880': 'Shelf3/',
+    '25662177': 'Shelf3/',
+    '25447828': 'Shelf3/',
+    '25120189': 'Shelf3/',
+    '25120363': 'Shelf3/',
+    '25537352': 'Shelf3/',
+    '25537369': 'Shelf3/',
+    '25537260': 'Shelf3/',
+    '25537154': 'Shelf3/',
+
 }
 
 def init():
@@ -68,7 +197,7 @@ def barcode_sub(msg):
     barcodes_max[msg.barcode][2] = max(barcodes_max[msg.barcode][2], map_pose.pose.position.z)
     pass
 
-def publish_marker(ean):
+def publi7sh_marker(ean):
     global marker_pub, barcode_to_object
     if marker_pub is None:
         marker_pub = rospy.Publisher('shelf_objects', Marker, queue_size=100)
