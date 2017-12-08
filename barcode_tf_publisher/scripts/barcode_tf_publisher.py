@@ -9,14 +9,16 @@ from refills_msgs.msg._Barcode import Barcode
 import numpy as np
 import tf
 from std_msgs.msg._ColorRGBA import ColorRGBA
+from std_srvs.srv import Trigger, TriggerResponse
 from tf.transformations import quaternion_from_euler
 from tf2_geometry_msgs.tf2_geometry_msgs import do_transform_point, do_transform_pose
 from tf2_ros.buffer import Buffer
 from tf2_ros.transform_listener import TransformListener
 from visualization_msgs.msg._Marker import Marker
 
-barcodes_min = defaultdict(lambda: np.ones(3)*np.inf)
-barcodes_max = defaultdict(lambda: np.ones(3)*-np.inf)
+# barcodes_min = defaultdict(lambda: np.ones(3)*np.inf)
+# barcodes_max = defaultdict(lambda: np.ones(3)*-np.inf)
+# barcode_known = defaultdict(bool)
 frame_id = 'map'
 tfBuffer = None
 tf_listener = None
@@ -24,10 +26,19 @@ barcode_pose_sub = None
 tf_broadcaster = None
 marker_pub = None
 min_scans = 3
+reset_trigger = None
 
-barcode_known = defaultdict(bool)
 
 refills_models_path = 'package://refills_models/'
+
+def resetter(data):
+    global barcode_known, barcodes_max, barcodes_min
+    barcode_known = defaultdict(bool)
+    barcodes_min = defaultdict(lambda: np.ones(3) * np.inf)
+    barcodes_max = defaultdict(lambda: np.ones(3) * -np.inf)
+    return TriggerResponse(True, '')
+
+resetter(None)
 
 barcode_to_object = {
     #shelf1
@@ -246,8 +257,8 @@ def get_barcode_positions(time):
                 publish_marker(k)
                 barcode_known[k] = True
 
-
 if __name__ == '__main__':
     init()
+    reset_trigger = rospy.Service('reset_shelf_objects', Trigger, resetter)
     tf_timer = rospy.Timer(rospy.Duration(3), get_barcode_positions)
     rospy.spin()
