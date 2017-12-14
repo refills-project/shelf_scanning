@@ -103,7 +103,7 @@ barcode_to_object = {
     '24491822': 'Shelf2/',
     '25072372': 'Shelf2/',
     '20369422': 'Shelf2/WeledaRaranhiaMundwasser/SM_WeledaRatanhiaMundwasser_fixed.dae',
-    '20369460': 'Shelf2/WeledaRatanhiaZahmcreme/SM_WeledaRatanhiaZahmcreme_fixed.dae',
+    '20369460': 'Shelf2/WeledaRatanhiaZahmcreme/SM_WeledaRatanhiaZahncreme_fixed.dae',
     '20349453': 'Shelf2/WeledaSoleZahncreme/SM_WeledaSoleZahncreme_fixed.dae',
     '20369880': 'Shelf2/WeledaCalendulaZahncreme/SM_WeledaCalendulaZahncreme_fixed.dae',
     '21907555': 'Shelf2/Aminomed/SM_Aminomed_fixed.dae',
