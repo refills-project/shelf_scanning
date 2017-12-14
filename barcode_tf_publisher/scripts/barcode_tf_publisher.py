@@ -80,37 +80,37 @@ barcode_to_object = {
     '24026109': 'Shelf1/',
     '24339612': 'Shelf1/',
     '25079234': 'Shelf1/',
-    # #shelf2
-    # #row0
-    # '20134624': 'Shelf2/',
-    # '24588232': 'Shelf2/',
-    # '25222739': 'Shelf2/',
-    # '21026966': 'Shelf2/',
-    # '21026942': 'Shelf2/',
-    # '25191516': 'Shelf2/',
-    # #row1
-    # '25229905': 'Shelf2/',
-    # '25229912': 'Shelf2/',
-    # '25230093': 'Shelf2/BlendAMedExtraFrisch/SM_BlendAMedExtraFrisch_fixed.dae',
-    # '25229851': 'Shelf2/BlendAMedNatuerlicheKraeuter/SM_BlendAMedNatuerlicheKraeuter_fixed.dae',
-    # '25230109': 'Shelf2/BlendAMedKristallweiss/SM_BlendAMedKristallweiss_fixed.dae',
-    # #row2
-    # '25229899': 'Shelf2/',
-    # '25229882': 'Shelf2/BlendAMedExpert/SM_BlendAMedExpert_fixed.dae',
-    # '22947635': 'Shelf2/',
-    # '22947604': 'Shelf2/',
-    # '24491815': 'Shelf2/',
-    # '24491822': 'Shelf2/',
-    # '25072372': 'Shelf2/',
-    # '20369422': 'Shelf2/WeledaRaranhiaMundwasser/SM_WeledaRatanhiaMundwasser_fixed.dae',
-    # '20369460': 'Shelf2/WeledaRatanhiaZahmcreme/SM_WeledaRatanhiaZahmcreme_fixed.dae',
-    # '20349453': 'Shelf2/WeledaSoleZahncreme/SM_WeledaSoleZahncreme_fixed.dae',
-    # '20369880': 'Shelf2/WeledaCalendulaZahncreme/SM_WeledaCalendulaZahncreme_fixed.dae',
-    # '21907555': 'Shelf2/Aminomed/SM_Aminomed_fixed.dae',
-    # #row3
-    # '21557774': 'Shelf2/',
-    # '24639408': 'Shelf2/',
-    # '25393552': 'Shelf2/',
+    #shelf2
+    #row0
+    '20134624': 'Shelf2/',
+    '24588232': 'Shelf2/',
+    '25222739': 'Shelf2/',
+    '21026966': 'Shelf2/',
+    '21026942': 'Shelf2/',
+    '25191516': 'Shelf2/',
+    #row1
+    '25229905': 'Shelf2/',
+    '25229912': 'Shelf2/',
+    '25230093': 'Shelf2/BlendAMedExtraFrisch/SM_BlendAMedExtraFrisch_fixed.dae',
+    '25229851': 'Shelf2/BlendAMedNatuerlicheKraeuter/SM_BlendAMedNatuerlicheKraeuter_fixed.dae',
+    '25230109': 'Shelf2/BlendAMedKristallweiss/SM_BlendAMedKristallweiss_fixed.dae',
+    #row2
+    '25229899': 'Shelf2/',
+    '25229882': 'Shelf2/BlendAMedExpert/SM_BlendAMedExpert_fixed.dae',
+    '22947635': 'Shelf2/',
+    '22947604': 'Shelf2/',
+    '24491815': 'Shelf2/',
+    '24491822': 'Shelf2/',
+    '25072372': 'Shelf2/',
+    '20369422': 'Shelf2/WeledaRaranhiaMundwasser/SM_WeledaRatanhiaMundwasser_fixed.dae',
+    '20369460': 'Shelf2/WeledaRatanhiaZahmcreme/SM_WeledaRatanhiaZahmcreme_fixed.dae',
+    '20349453': 'Shelf2/WeledaSoleZahncreme/SM_WeledaSoleZahncreme_fixed.dae',
+    '20369880': 'Shelf2/WeledaCalendulaZahncreme/SM_WeledaCalendulaZahncreme_fixed.dae',
+    '21907555': 'Shelf2/Aminomed/SM_Aminomed_fixed.dae',
+    #row3
+    '21557774': 'Shelf2/',
+    '24639408': 'Shelf2/',
+    '25393552': 'Shelf2/',
     # #Shelf3
     # #row0
     # '22607256': 'Shelf3/',
@@ -253,9 +253,9 @@ def get_barcode_positions(time):
         mean_pose = (v + barcodes_max[k])/2
         if np.inf not in mean_pose:
             publish_tf_pose(k, mean_pose)
-            if not barcode_known[k]:
-                publish_marker(k)
-                barcode_known[k] = True
+            publish_marker(k)
+            # if not barcode_known[k]:
+            #     barcode_known[k] = True
 
 if __name__ == '__main__':
     init()
