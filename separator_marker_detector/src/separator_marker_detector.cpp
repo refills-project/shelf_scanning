@@ -213,7 +213,7 @@ public:
 
     ho_Image = *halcon_msg_image;
 
-    ROS_INFO("Received an image.");
+    // ROS_INFO("Received an image.");
 
     //Matching 01: Find the model
     FindPlanarCalibDeformableModel(ho_Image, hv_ModelID, HTuple(-20).TupleRad(),
@@ -226,8 +226,10 @@ public:
     int num_matches = hv_Score.Length();
 
 
-    std::string printout;
-    ROS_INFO(("num_matches: " + std::to_string(num_matches)).c_str());
+    if (num_matches > 0){
+      std::string printout;
+      ROS_INFO(("num_matches: " + std::to_string(num_matches)).c_str());
+    }
 
     refills_msgs::SeparatorArray seps;
     seps.separators.clear();
