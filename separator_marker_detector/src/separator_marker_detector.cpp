@@ -217,7 +217,7 @@ public:
 
     //Matching 01: Find the model
     FindPlanarCalibDeformableModel(ho_Image, hv_ModelID, HTuple(-20).TupleRad(),
-        HTuple(40).TupleRad(), 1, 1, 1, 1, 0.89, 4, 0.5, 3, 1, "subpixel", "least_squares_very_high",
+        HTuple(40).TupleRad(), 1, 1, 1, 1, 0.75, 4, 0.5, 3, 1, "subpixel", "least_squares_very_high",
         &hv_ResultPose, &hv_ResultCovariance, &hv_Score);
 
 
