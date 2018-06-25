@@ -26,7 +26,7 @@
 #include <refills_msgs/Separator.h>
 #include <refills_msgs/SeparatorArray.h>
 
-#include <halcon_image.h>
+#include <asr_halcon_bridge/halcon_image.h>
 
 // Using image_transport for publishing and subscribing to images in ROS
 #include <image_transport/image_transport.h>
@@ -108,37 +108,46 @@ public:
     //Matching 01: Initialize calibration
     hv_CamParam.Clear();
     hv_CamParam[0] = "area_scan_division";
-    hv_CamParam[1] = 0.0165305;
-    hv_CamParam[2] = -712.366;
-    hv_CamParam[3] = 5.85802e-06;
-    hv_CamParam[4] = 5.86e-06;
-    hv_CamParam[5] = 953.265;
-    hv_CamParam[6] = 583.799;
-    hv_CamParam[7] = 1920;
-    hv_CamParam[8] = 1200;
+    hv_CamParam[1] = 0.0164374;
+    hv_CamParam[2] = -102.241;
+    hv_CamParam[3] = 3.45033e-06;
+    hv_CamParam[4] = 3.45e-06;
+    hv_CamParam[5] = 2082.16;
+    hv_CamParam[6] = 1392.79;
+    hv_CamParam[7] = 4096;
+    hv_CamParam[8] = 3000;
     hv_CamPose.Clear();
-    hv_CamPose[0] = 0.0243474;
-    hv_CamPose[1] = -0.000251698;
-    hv_CamPose[2] = 0.310683;
-    hv_CamPose[3] = 343.306;
-    hv_CamPose[4] = 4.86343;
-    hv_CamPose[5] = 180.841;
+    hv_CamPose[0] = 0.0188459;
+    hv_CamPose[1] = -0.0116134;
+    hv_CamPose[2] = 0.631195;
+    hv_CamPose[3] = 356.449;
+    hv_CamPose[4] = 359.438;
+    hv_CamPose[5] = 269.594;
     hv_CamPose[6] = 0;
     //
     //Matching 01: Obtain the model image
-    ReadImage(&ho_Image, "/home/amaldo/dm_marker_samples/cam_calib/template_dm_logo.hobj");
+    //For the 2MP camera
+    //ReadImage(&ho_Image, "/home/amaldo/dm_marker_samples/cam_calib/template_dm_logo.hobj");
+    //New file for the 12MP camera
+    ReadImage(&ho_Image, "/home/amaldo/dm_marker_samples/12mp/template_dm_logo.hobj");
     //
     //Matching 01: Build the ROI from basic regions
-    GenRectangle1(&ho_ModelRegion, 508.5, 1126.5, 600.5, 1224.5);
+    //GenRectangle1(&ho_ModelRegion, 508.5, 1126.5, 600.5, 1224.5);
+    GenRectangle1(&ho_ModelRegion, 1242.44, 2169.42, 1325.35, 2259.58);
     //
     //Matching 01: Reduce the model template
     ReduceDomain(ho_Image, ho_ModelRegion, &ho_TemplateImage);
     //
     //Matching 01: Create the deformable model
-    CreatePlanarCalibDeformableModel(ho_TemplateImage, hv_CamParam, hv_CamPose, 3,
-        HTuple(-20).TupleRad(), HTuple(40).TupleRad(), HTuple(1).TupleRad(), 1, 1,
-        0.02, 1, 1, 0.02, "none", "use_polarity", (HTuple(25).Append(37)), 5, HTuple(),
-        HTuple(), &hv_ModelID);
+    //CreatePlanarCalibDeformableModel(ho_TemplateImage, hv_CamParam, hv_CamPose, 3,
+    //    HTuple(-20).TupleRad(), HTuple(40).TupleRad(), HTuple(1).TupleRad(), 1, 1,
+    //    0.02, 1, 1, 0.02, "none", "use_polarity", (HTuple(25).Append(37)), 5, HTuple(),
+    //    HTuple(), &hv_ModelID);
+    CreatePlanarCalibDeformableModel(ho_TemplateImage, hv_CamParam, hv_CamPose, 6,
+        HTuple(-10).TupleRad(), HTuple(20).TupleRad(), HTuple(1).TupleRad(), 1, 1,
+        0.02, 1, 1, 0.02, "point_reduction_low", "use_polarity", (HTuple(26).Append(78)),
+        5, "min_size", 75, &hv_ModelID);
+
     //Matching 01: Calculate scaling factor for back projection
     GetImageSize(ho_Image, &hv_ImageWidth, &hv_ImageHeight);
     ImagePointsToWorldPlane(hv_CamParam, hv_CamPose, HTuple(0).TupleConcat(hv_ImageHeight-1),
@@ -216,9 +225,10 @@ public:
     // ROS_INFO("Received an image.");
 
     //Matching 01: Find the model
-    FindPlanarCalibDeformableModel(ho_Image, hv_ModelID, HTuple(-20).TupleRad(),
-        HTuple(40).TupleRad(), 1, 1, 1, 1, 0.75, 4, 0.5, 3, 1, "subpixel", "least_squares_very_high",
+    FindPlanarCalibDeformableModel(ho_Image, hv_ModelID, HTuple(-10).TupleRad(),
+        HTuple(20).TupleRad(), 1, 1, 1, 1, 0.7, 14, 0, 6, 0.8, "subpixel", "least_squares_high",
         &hv_ResultPose, &hv_ResultCovariance, &hv_Score);
+
 
 
     //After running FindPlanarCalibDeformableModel, hv_ResultPose is a HTuple of Length (num_detections * 7).
@@ -228,7 +238,7 @@ public:
 
     if (num_matches > 0){
       std::string printout;
-      ROS_INFO(("num_matches: " + std::to_string(num_matches)).c_str());
+      ROS_INFO_STREAM(("num_matches: " + std::to_string(num_matches)).c_str());
     }
 
     refills_msgs::SeparatorArray seps;
