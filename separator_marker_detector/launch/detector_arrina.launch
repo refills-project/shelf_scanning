@@ -1,0 +1,10 @@
+<launch>
+  <node name="separator_marker_detector_node" pkg="separator_marker_detector" type="separator_marker_detector" output="screen">
+    <remap from="~/image_in" to="arrina_wrist_camera/image_color"/>
+    <!--param name="image_transport" value="compressed"/>
+    <remap from="~/image_in/compressed" to="arrina_wrist_camera/image_color/compressed"/-->
+
+  </node>
+</launch>
+
+

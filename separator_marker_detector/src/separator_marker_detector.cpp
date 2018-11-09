@@ -124,6 +124,29 @@ public:
     hv_CamPose[4] = 359.438;
     hv_CamPose[5] = 269.594;
     hv_CamPose[6] = 0;
+   
+    //for ARRINA:
+    //CameraParameters := ['area_scan_division',0.0161555,-198.596,3.44973e-06,3.45e-06,2107.25,1498.04,4096,3000]
+    hv_CamParam.Clear();
+    hv_CamParam[0] = "area_scan_division";
+    hv_CamParam[1] = 0.0161555;
+    hv_CamParam[2] = -198.596;
+    hv_CamParam[3] = 3.44973e-06;
+    hv_CamParam[4] = 3.45e-06;
+    hv_CamParam[5] = 2107.25;
+    hv_CamParam[6] = 1498.04;
+    hv_CamParam[7] = 4096;
+    hv_CamParam[8] = 3000;
+    hv_CamPose.Clear();
+    //CamPose := [0.077491,-0.00216746,0.551575,359.077,1.17243,270.846,0]
+    hv_CamPose[0] = 0.077491;
+    hv_CamPose[1] = -0.00216746;
+    hv_CamPose[2] = 0.551575;
+    hv_CamPose[3] = 359.077;
+    hv_CamPose[4] = 1.17243;
+    hv_CamPose[5] = 270.846;
+    hv_CamPose[6] = 0;
+
     //
     //Matching 01: Obtain the model image
     //For the 2MP camera
@@ -132,8 +155,7 @@ public:
     ReadImage(&ho_Image, "/home/amaldo/dm_marker_samples/12mp/template_dm_logo.hobj");
     //
     //Matching 01: Build the ROI from basic regions
-    //GenRectangle1(&ho_ModelRegion, 508.5, 1126.5, 600.5, 1224.5);
-    GenRectangle1(&ho_ModelRegion, 1242.44, 2169.42, 1325.35, 2259.58);
+    GenRectangle1(&ho_ModelRegion, 1444.49, 2706.64, 1519.63, 2826.27);
     //
     //Matching 01: Reduce the model template
     ReduceDomain(ho_Image, ho_ModelRegion, &ho_TemplateImage);
@@ -145,8 +167,8 @@ public:
     //    HTuple(), &hv_ModelID);
     CreatePlanarCalibDeformableModel(ho_TemplateImage, hv_CamParam, hv_CamPose, 6,
         HTuple(-10).TupleRad(), HTuple(20).TupleRad(), HTuple(1).TupleRad(), 1, 1,
-        0.02, 1, 1, 0.02, "point_reduction_low", "use_polarity", (HTuple(26).Append(78)),
-        5, "min_size", 75, &hv_ModelID);
+        0.02, 1, 1, 0.02, "point_reduction_low", "use_polarity", (HTuple(47).Append(81)),
+        5, HTuple(), HTuple(), &hv_ModelID);
 
     //Matching 01: Calculate scaling factor for back projection
     GetImageSize(ho_Image, &hv_ImageWidth, &hv_ImageHeight);
@@ -238,7 +260,7 @@ public:
 
     if (num_matches > 0){
       std::string printout;
-      ROS_INFO_STREAM(("num_matches: " + std::to_string(num_matches)).c_str());
+      ROS_DEBUG_STREAM(("num_matches: " + std::to_string(num_matches)).c_str());
     }
 
     refills_msgs::SeparatorArray seps;
@@ -254,7 +276,7 @@ public:
       //hv_I = (int)i;
       //hv_RectificationPose = hv_ResultPose.TupleSelectRange(hv_I*7,(hv_I*7)+6);
       //std::cout << hv_RectificationPose[0].D() << std::endl;
-      std::cout << "x: " << hv_ResultPose[0+i*7].D() << " y: " << hv_ResultPose[1+i*7].D() << " z: " << hv_ResultPose[2+i*7].D() << std::endl;
+      ROS_DEBUG_STREAM("match #:"  << i <<  " x: " << hv_ResultPose[0+i*7].D() << " y: " << hv_ResultPose[1+i*7].D() << " z: " << hv_ResultPose[2+i*7].D());
 
       //Prepare the ros message for each
       refills_msgs::Separator sep;
