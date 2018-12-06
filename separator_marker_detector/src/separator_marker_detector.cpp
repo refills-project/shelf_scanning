@@ -155,7 +155,7 @@ public:
     ReadImage(&ho_Image, "/home/amaldo/dm_marker_samples/12mp/template_dm_logo.hobj");
     //
     //Matching 01: Build the ROI from basic regions
-    GenRectangle1(&ho_ModelRegion, 1444.49, 2706.64, 1519.63, 2826.27);
+    GenRectangle1(&ho_ModelRegion, 1445.2, 2705.65, 1520.44, 2825.26);
     //
     //Matching 01: Reduce the model template
     ReduceDomain(ho_Image, ho_ModelRegion, &ho_TemplateImage);
@@ -166,9 +166,9 @@ public:
     //    0.02, 1, 1, 0.02, "none", "use_polarity", (HTuple(25).Append(37)), 5, HTuple(),
     //    HTuple(), &hv_ModelID);
     CreatePlanarCalibDeformableModel(ho_TemplateImage, hv_CamParam, hv_CamPose, 6,
-        HTuple(-10).TupleRad(), HTuple(20).TupleRad(), HTuple(1).TupleRad(), 1, 1,
-        0.02, 1, 1, 0.02, "point_reduction_low", "use_polarity", (HTuple(47).Append(81)),
-        5, HTuple(), HTuple(), &hv_ModelID);
+        HTuple(-35).TupleRad(), HTuple(70).TupleRad(), HTuple(2).TupleRad(), 0.8, 1,
+        0.1, 0.8, 1, 0.1, "point_reduction_low", "use_polarity", (HTuple(65).Append(133)),
+        47, "min_size", 60, &hv_ModelID);
 
     //Matching 01: Calculate scaling factor for back projection
     GetImageSize(ho_Image, &hv_ImageWidth, &hv_ImageHeight);
@@ -247,8 +247,8 @@ public:
     // ROS_INFO("Received an image.");
 
     //Matching 01: Find the model
-    FindPlanarCalibDeformableModel(ho_Image, hv_ModelID, HTuple(-10).TupleRad(),
-        HTuple(20).TupleRad(), 1, 1, 1, 1, 0.7, 14, 0, 6, 0.8, "subpixel", "least_squares_high",
+    FindPlanarCalibDeformableModel(ho_Image, hv_ModelID, HTuple(-35).TupleRad(),
+        HTuple(70).TupleRad(), 0.8, 1, 0.8, 1, 0.55, 14, 0, 6, 1, "subpixel", "least_squares",
         &hv_ResultPose, &hv_ResultCovariance, &hv_Score);
 
 
