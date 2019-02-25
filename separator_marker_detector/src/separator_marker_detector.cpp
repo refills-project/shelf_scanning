@@ -305,7 +305,7 @@ public:
       marker.color.b = 0.0f;
       marker.color.a = 1.0f;
 
-      marker.lifetime = ros::Duration();
+      marker.lifetime = ros::Duration(0.2);
 
       marker.scale.x = 0.01;
       marker.scale.y = 0.01;

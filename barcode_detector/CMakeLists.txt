@@ -55,7 +55,7 @@ link_directories($ENV{HALCONROOT}/lib/$ENV{HALCONARCH})
 
 
 
-add_executable(barcode_detector src/barcode_detector)
+add_executable(barcode_detector src/barcode_hack)
 
 
 target_link_libraries(barcode_detector
