@@ -1,6 +1,6 @@
 /*
  * Separator Marker Detector
- * Copyright (C) 2018 - Alexis Maldonado, Universitaet Bremen
+ * Copyright (C) 2018-2019 - Alexis Maldonado, Universitaet Bremen
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -237,6 +237,7 @@ public:
       ROS_ERROR("halcon_bridge exception: %s", e.what());
       return;
     }
+    //ROS_INFO_STREAM("Encoding of image: " << halcon_ptr->encoding << " \n");
 
     // Process halcon_ptr->image using Halcon
     halcon_msg_image = halcon_ptr->image;
@@ -247,10 +248,14 @@ public:
     // ROS_INFO("Received an image.");
 
     //Matching 01: Find the model
-    FindPlanarCalibDeformableModel(ho_Image, hv_ModelID, HTuple(-35).TupleRad(),
-        HTuple(70).TupleRad(), 0.75, 1, 0.75, 1, 0.59, 9, 0, 4, 0.8, "subpixel", "least_squares",
-        &hv_ResultPose, &hv_ResultCovariance, &hv_Score);
-
+    try {
+        FindPlanarCalibDeformableModel(ho_Image, hv_ModelID, HTuple(-35).TupleRad(),
+            HTuple(70).TupleRad(), 0.75, 1, 0.75, 1, 0.59, 9, 0, 4, 0.8, "subpixel", "least_squares",
+            &hv_ResultPose, &hv_ResultCovariance, &hv_Score);
+    } catch (HException &e) {
+        ROS_ERROR_STREAM("Halcon Exception: " << e.ErrorMessage() << "\n");
+        return;
+    }
 
 
     //After running FindPlanarCalibDeformableModel, hv_ResultPose is a HTuple of Length (num_detections * 7).
@@ -305,7 +310,7 @@ public:
       marker.color.b = 0.0f;
       marker.color.a = 1.0f;
 
-      marker.lifetime = ros::Duration(0.2);
+      marker.lifetime = ros::Duration(1.0);
 
       marker.scale.x = 0.01;
       marker.scale.y = 0.01;
@@ -317,93 +322,6 @@ public:
 
     data_pub_.publish(seps);
     marker_pub_.publish(markers);
-
-
-
-
-
-//    //FindBarCode needs a single-channel image (gray values)
-//    HImage gray_image = halcon_msg_image->Rgb1ToGray();
-//    HBarCode bc;
-//    bc.CreateBarCodeModel(HTuple(), HTuple());
-//
-//    HString found_bc_string;
-//    HTuple found_bc_strings;
-//
-//    HRegion bc_regions;
-//    int num_barcodes = 0;
-//
-//    try {
-//      bc_regions = gray_image.FindBarCode(bc, "EAN-8", &found_bc_strings);
-//      num_barcodes = found_bc_strings.Length();
-//
-//    } catch (HException &except) {
-//      std::cout << "Exception while running FindBarCode" << std::endl;
-//      std::cout << except.ErrorMessage() << std::endl;
-//    }
-//
-//    if (num_barcodes == 0) {
-//      try {
-//        hbridge_img.image = halcon_msg_image;
-//        hbridge_img.header.frame_id = halcon_ptr->header.frame_id;
-//        hbridge_img.header.stamp = halcon_ptr->header.stamp;
-//        hbridge_img.encoding = halcon_ptr->encoding;
-//
-//        hbridge_img.toImageMsg(image_msg);
-//        image_pub_.publish(image_msg);
-//      } catch (HException &except) {
-//        std::cout << "Exception while publishing the result image" << std::endl;
-//        std::cout << except.ErrorMessage() << std::endl;
-//      }
-//
-//
-//      return;
-//    }
-//
-//
-//      HString code = found_bc_strings[i];
-////      std::cout << "Barcode: " << code << std::endl;
-//      refills_msgs::Barcode barcode_msg;
-//
-//      barcode_msg.barcode_pose.header.frame_id = halcon_ptr->header.frame_id;
-//      barcode_msg.barcode_pose.header.stamp = halcon_ptr->header.stamp;
-//
-//      barcode_msg.barcode_pose.pose.orientation.w = 1;
-//      barcode_msg.barcode_pose.pose.position.z = 0.2;
-//
-//      barcode_msg.barcode = code;
-//      barcode_pub_.publish(barcode_msg);
-//    }
-//
-//    try {
-//
-//      HTuple grayvalue(120.0, 120.0);
-//      //grayvalue.Append(HTuple(0.0));
-//
-//      //paint on top of the original color image
-//      display_image = halcon_msg_image->PaintRegion(bc_regions, grayvalue, HString("fill"));
-//      //display_image = gray_image.PaintRegion(bc_regions, grayvalue, HString("fill"));
-//
-//
-//    } catch (HException &except) {
-//      std::cout << "Exception while running PaintRegion" << std::endl;
-//      std::cout << except.ErrorMessage() << std::endl;
-//    }
-//
-//
-//    try {
-//      hbridge_img.image = &display_image;
-//      hbridge_img.header.frame_id = halcon_ptr->header.frame_id;
-//      hbridge_img.header.stamp = halcon_ptr->header.stamp;
-//      hbridge_img.encoding = halcon_ptr->encoding;
-//
-//      hbridge_img.toImageMsg(image_msg);
-//      image_pub_.publish(image_msg);
-//    } catch (HException &except) {
-//      std::cout << "Exception while publishing the result image" << std::endl;
-//      std::cout << except.ErrorMessage() << std::endl;
-//    }
-
 
   }
 
